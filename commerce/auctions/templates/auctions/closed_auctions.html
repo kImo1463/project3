@@ -1,0 +1,60 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<style>
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 2rem;
+}
+h2 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 1.5rem;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.listing {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    margin: 0.5rem;
+    width: calc(33.333% - 1rem);
+    box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+
+}
+.listing:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+</style>
+
+<h2>Closed Auctions</h2>
+<ul>
+    {% for auction in closed_auctions %}
+    <div class="listing">
+
+            <h3>{{ auction.listing.title }}</h3>
+            <p>Final Bid: ${{ auction.listing.current_bid }}</p>
+            <p>Winner: {% if auction.winner %}{{ auction.winner.username }}{% else %}No bids{% endif %}</p>
+    </div>
+    {% endfor %}
+</ul>
+{% endblock %}

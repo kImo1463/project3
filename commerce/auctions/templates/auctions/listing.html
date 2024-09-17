@@ -1,0 +1,126 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<style>
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: left;
+    padding: 2rem;
+}
+h2 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+form {
+    margin-top: 1rem;
+    display: left;
+    align-items: center;
+    gap: 0.5rem;
+}
+input[type="number"], textarea {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing:auto;
+}
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #0056b3;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+.error {
+    color: red;
+}
+</style>
+
+<h2>{{ listing.title }}</h2>
+<p>Category: {{ category }}</p>
+<p>Listed by: {{ listed_by.username }}</p>
+<p>Current price: ${{ listing.current_price }}</p>
+{% if highest_bidder %}
+<p>Highest bidder: {{ highest_bidder.username }}</p>
+{% else %}
+<p>No bids yet.</p>
+{% endif %}
+
+{% if listing.image_url %}
+    <img src="{{ listing.image_url }}" alt="{{ listing.title }}">
+{% endif %}
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+{% if listing.is_active %}
+<form method="post">
+    {% csrf_token %}
+    <input type="number" name="bid_amount" step="0.01" placeholder="Your bid">
+    <button type="submit" name="bid">Place Bid</button>
+</form>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <textarea name="comment_content" placeholder="Your comment"></textarea>
+    <button type="submit" name="comment">Add Comment</button>
+</form>
+
+{% if user_watchlist %}
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="watchlist_remove">Remove from Watchlist</button>
+</form>
+{% else %}
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="watchlist_add">Add to Watchlist</button>
+</form>
+{% endif %}
+
+{% if is_owner and listing.is_active %}
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="close_auction">Close Auction</button>
+</form>
+{% endif %}
+
+<h3>Comments</h3>
+<ul>
+    {% for comment in comments %}
+    <li>
+        <p>{{ comment.user.username }}: {{ comment.content }} ({{ comment.created_at }})</p>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

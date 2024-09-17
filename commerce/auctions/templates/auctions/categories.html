@@ -1,0 +1,78 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <style>
+        .categories-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .category-link {
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .category-link:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        
+        .listings-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .listing-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #fff;
+            transition: box-shadow 0.3s;
+        }
+        
+        .listing-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .listing-card h4 {
+            margin: 0;
+            color: #007bff;
+        }
+    </style>
+
+    <h2>Listings</h2>
+
+    {% if categories %}
+        <div class="categories-container">
+            {% for category in categories %}
+                {% if category %}
+                    <a href="{% url 'category' category %}" class="category-link">{{ category }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if category_name %}
+        {% if listings %}
+            <div class="listings-container">
+                {% for listing in listings %}
+                    <div class="listing-card">
+                        <a href="{% url 'listing' listing.id %}">
+                            <h4>{{ listing.title }}</h4>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>There are no active listings in the "{{ category_name }}" category.</p>
+        {% endif %}
+   {% endif %}
+
+{% endblock %}
